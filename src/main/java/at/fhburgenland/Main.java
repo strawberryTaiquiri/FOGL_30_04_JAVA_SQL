@@ -19,17 +19,26 @@ public class Main {
                 -) delete Person
          */
 
+        addPerson("max", "musterman", 1000);
+
         EMF.close();
     }
 
-    public static void addPerson(String vorname, String nachname, int Gehalt){
+    public static void addPerson(String vorname, String nachname, int gehalt){
         EntityManager em = EMF.createEntityManager();
         EntityTransaction et = null;
 
         try{
+            et = em.getTransaction();
+            et.begin();
+            Person p = new Person(vorname, nachname, gehalt);
+            em.persist(p);
+            et.commit();
 
         } catch (Exception ex){
-            System.out.println("ex = " + ex);
+            if(et != null){
+                et.rollback();
+            }
         } finally {
             em.close();
         }
