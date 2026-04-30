@@ -2,6 +2,8 @@ package at.fhburgenland;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 public class Main {
 
     private static EntityManagerFactory EMF = Persistence.createEntityManagerFactory("person");
@@ -19,7 +21,7 @@ public class Main {
                 -) delete Person
          */
 
-        addPerson("max", "musterman", 1000);
+        readAll();
 
         EMF.close();
     }
@@ -43,6 +45,34 @@ public class Main {
             em.close();
         }
 
+
+
+
+    }
+
+
+    public static void readAll(){
+
+        EntityManager em = EMF.createEntityManager();
+
+        String query = "SELECT p from Person p";
+
+        TypedQuery<Person> tq = em.createQuery(query, Person.class);
+
+        List<Person> personList = null;
+
+        try{
+            personList = tq.getResultList();
+
+            for (Person person : personList) {
+                System.out.println(person.getPnr() +" "+ person.getVorname() + " "+
+                        person.getNachname() +" "+ person.getGehalt());
+            }
+        } catch (Exception ex){
+            ex.printStackTrace();
+        } finally {
+            em.close();
+        }
 
 
 
